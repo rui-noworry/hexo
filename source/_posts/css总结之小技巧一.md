@@ -77,3 +77,12 @@ break-all （可以在单词某个字母处换行）
 			Word-break:break-all;
 			-webkit-box-orient:vertical;
 		 }
+
+
+## 标签嵌套问题
+> 例如：在浏览器中渲染的时候会展示成两个两个并列的a
+
+		<a href=""><a href="">非法嵌套</a></a>
+		<p> <p></p> </p>
+
+*  注意在做详情介绍的时候外层标签不能用p，编辑器上传的数据可能含有p标签*
