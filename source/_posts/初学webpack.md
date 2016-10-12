@@ -149,3 +149,235 @@ index.html
 
 
 
+### loaders相关
+### loaders中 ！ 的含义
+
+> 代表加载器的流式调用，例如：
+
+{test：/\.css\.less$/, loader：'style!css!less'}
+
+意思是先使用less加载器来解释less文件，然后使用css加载器来解析less解析后的文件
+
+#### loaders中的include和exclude
+
+> include 表示必须要包含的文件或目录，exclude表示要排除的目录
+
+例如：
+我们配置中要排除node_modules目录，写法如下：
+``` bash
+module：{
+	loaders:[
+		{
+			test:/\.js$/,
+			loader: 'babel', // 注意与test可以合并写，也可以分开写
+			exclude: nodeModuleDir
+		}
+	]
+}
+```
+
+官方建议，最好用include,而且include最好是目录
+
+### resove 相关
+
+#### resove.alias
+
+> 为模块路径设置别名，指定引入路径，减少搜索硬盘的时间, 配置与module同级
+
+例如：
+``` bash
+	module.exports = {
+	   ...
+	    resolve : {
+		    alias:{
+			    jquery : 'app/vender/jquery.min.js'
+		    }
+	    },
+	   ...
+	};
+
+```
+
+#### resolve.extensions
+
+> 这个项目的作用是自动加上文件的扩展名
+
+比如你要引入scss文件:
+
+		require('syle.scss')
+
+配置之后，只需这样
+
+		require('style')
+
+``` bash
+	module.exports = {
+	   ...
+	    resolve : {
+		    alias:{
+			    jquery : 'app/vender/jquery.min.js'
+		    },
+		   extensions: ["", ".webpack.js", ".js", ".scss"]
+	    },
+	    ...
+	};
+
+```
+
+### externals
+
+> 当我们项目引入一些其他类库的时候，但是又不想类库被构建，就要配置这个参数
+
+``` bash
+	moduel.exports = {
+		...
+		externals : {
+			'react' : 'React'
+		},
+		...
+	}
+```
+
+externals的key就是require是用的，例如require('react') value表示window.React
+
+### devtool
+
+> 提供了一些方式使代码调试更加方便，因为打包之后代码都是合并的，不利于调试和定位
+
+``` bash
+	moduel.exports = {
+		...
+		devtools : 'eval-source-map',
+		...
+	}
+```
+
+### 抽取多入口文件的公共部分 CommonsChunkPlugin
+
+> 此插件不用安装只需引入webpack模块
+
+我们重新建立一个文件夹叫common, 下面有两个入口文件 app1.js 和app2.js:
+
+``` bash
+	// common/app1.js
+	console.log('App1');
+```
+``` bash
+	// common/app2.js
+	console.log('App2');
+```
+
+打包之后生成app1.bundle.js, app2.bundle.js 这个两个文件里会有很多公共部分，我们可以把他们提取出来
+
+所以配置文件中的设置如下：
+
+``` bash
+	var webpack = require('webpack')
+	module.exports = {
+	    // 如果你有多个入口js文件，需要打包在一个文件夹中，这样写：
+	    // entry: ['./app1.js', './app2.js']
+	    entry:'./app.js',
+	    output:{
+	        path:'./assets',
+	        filename:'[name].bundle.js'
+	    },
+	    module:{
+	        loaders :[ // 注意是loaders 不要少了s
+	            {test:/\.js$/, loader:'babel'}, // 注意是test不是text
+	            {test:/\.css$/,loader:'style!css'}
+	        ]
+	    }，
+	    plugins:[
+			// 实例引入的webpack
+			new webpack.optimize.CommonsChunkPlugin('common/common.js')
+			// 会在assets下面自动建common文件夹并生成common.js
+		]
+	};
+```
+抽取出的公共js为common.js
+查看app1.bundle.js就是模块中写的代码，公共部分都提取到common.js中了
+
+
+### extract-text-webpack-plugin 抽取css文件，打包成css bundle
+
+默认情况下js中require的css文件会在浏览器预览的时候直接引入到index.html在head中生成style属于内联，如果想将css文件提取出来可以按照下面的配置去做：
+
+ app.js
+``` bash
+
+	require('./app.css');
+	document.getElementById('container').textContent = "App";
+
+```
+ app2.js
+``` bash
+	require('./app2.css');
+	document.getElementById('container').textContent = "App2";
+
+```
+app.css
+``` bash
+
+	* {
+	    margin: 0;
+	    padding: 0;
+	}
+
+	#container {
+	    margin: 50px auto;
+	    width: 50%;
+	    height: 200px;
+	    line-height: 200px;
+	    border-radius: 5px;
+	    box-shadow: 0 0 .5em #000;
+	    text-align: center;
+	    font-size: 40px;
+	    font-weight: bold;
+	}
+
+```
+app2.css
+``` bash
+
+	#container{
+	    background: #ff0000;
+	}
+```
+
+webpack.config.js
+
+``` bash
+	var webpack = require('webpack');
+	// 安装这个插件 npm install
+	var ExtractTextPlugin = require('extract-text-webpack-plugin');
+	module.exports = {
+	    entry: {
+	        app: './app.js',
+	        app2: './app2.js'
+	    },
+	    output:{
+	        path:'./assets',
+	        filename:'[name].bundle.js'
+	    },
+	    module:{
+	        loaders :[
+	            {test:/\.js$/, loader:'babel'},
+	            {test:/\.css$/,loader:ExtractTextPlugin.extract("style-loader", "css-loader")}
+	        ]
+	    },
+	    plugins:[
+	        new webpack.optimize.CommonsChunkPlugin('common/common.js'),
+	        new ExtractTextPlugin("[name].css") // name对应的是入口的key
+	    ]
+	};
+```
+
+最终在assets下面生成app.css和app2.css 可以引入到index.html中
+
+> 如果不使用这个插件就会自动引入，编译成内敛样式，如果使用这个插件就需要**手动引入生成的文件啦**
+
+### extract-text-webpack-plugin 将多个入口的css文件合并到一个文件
+
+
+
+
