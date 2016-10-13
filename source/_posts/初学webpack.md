@@ -376,7 +376,141 @@ webpack.config.js
 
 > 如果不使用这个插件就会自动引入，编译成内敛样式，如果使用这个插件就需要**手动引入生成的文件啦**
 
-### extract-text-webpack-plugin 将多个入口的css文件合并到一个文件
+### extract-text-webpack-plugin
+
+> 这个插件还可以将入口引入的所有css都打包成一个文件
+
+例如：
+
+``` bash
+	var webpack = require('webpack');
+	// 安装这个插件 npm install
+	var ExtractTextPlugin = require('extract-text-webpack-plugin');
+	module.exports = {
+	    entry: {
+	        app: './app.js',
+	        app2: './app2.js'
+	    },
+	    output:{
+	        path:'./assets',
+	        filename:'[name].bundle.js'
+	    },
+	    module:{
+	        loaders :[
+	            {test:/\.js$/, loader:'babel'},
+	            {test:/\.css$/,loader:ExtractTextPlugin.extract("style-loader", "css-loader")}
+	        ]
+	    },
+	    plugins:[
+	        new webpack.optimize.CommonsChunkPlugin('common/common.js'),
+	        new ExtractTextPlugin("style.css",{
+	            allChunks: true
+	        }) // name对应的是入口的key
+	    ]
+	};
+```
+
+如果有多个入口文件，会将最后一个入口文件里的所有css打包，app.js里的文件被忽略
+
+### 给文件添加版本号 HtmlWebpackPlugin插件
+
+**线上发布**时，防止浏览器缓存静态文件，所以给文件加版本号，有两
+
+例如：
+``` bash
+
+var webpack = require('webpack');
+var ExtractTextPlugin = require('extract-text-webpack-plugin');
++ var HtmlWebpackPlugin = require('html-webpack-plugin');
+
+module.exports = {
+    entry: {
+        app: './app.js',
+        app2: './app2.js'
+    },
+    // entry: './app.js',
+    output:{
+        path:'./assets',
+        +filename:'[name].[hash].bundle.js',
+        +publicPath:'http://rui-noworry.github.com/assets'
+    },
+    module:{
+        loaders :[
+            {test:/\.js$/, loader:'babel'},
+            // {test:/\.css$/, loader:"style!css"}
+            {test:/\.css$/,loader:ExtractTextPlugin.extract("style-loader", "css-loader")}
+        ]
+    },
+    plugins:[
+        new webpack.optimize.CommonsChunkPlugin('common.js'),
+        new ExtractTextPlugin("style.css",{
+            allChunks:true
+        }),
+       + new HtmlWebpackPlugin({
+            filename:'./index-release.html',
+            template: './index.html',
+            inject: 'body'
+        })
+    ]
+};
+```
+
+``` bash
+	<!DOCTYPE html>
+	<html lang="en">
+	<head>
+	    <meta charset="UTF-8">
+	    <title>Title</title>
+	    <link type="text/css" rel="stylesheet" href="./assets/style.css" />
+	</head>
+	<body>
+	    <div id="container"></div>
+	    <script src="./assets/common.js"></script>
+	    <script src="./assets/app.26be6a63cd011a056420.bundle.js"></script>
+	</body>
+	</html>
+```
+**注意，index.html一定要和node-module同级，否则会报babel错误**
+这个插件加上版本号之后还会 自动加入到发布之后的html中，如果不用这个插件会生成hash文件但是不会自动加进发布之后的html文件
+
+### 关于loader
+
+loader是支持链式执行的，并且由右向左执行，可以由sass-loader,css-loader,style-loader组成
+
+### 布置一个本地服务器
+
+``` bash
+	cnpm install -g webpack-dev-server
+
+	// 设置文件移动目录
+	webpack-dev-server --content-base basic/
+
+```
+如果在node_module所在目录可以直接执行webpack-dev-server
+如果不在此目录，则需要指定目录，就执行webpack-dev-server --content-base basic/
+
+### webpack.config.js支持es6语法
+
+依赖的插件：babel-loader，babel-core, babel-preset-es2015
+
+``` bash
+	module:{
+        loaders :[
+            {
+                test:/\.js$/,
+                loader:'babel',
+                query:{
+                    presets:['es2015']
+                }
+            },
+            // {test:/\.css$/, loader:"style!css"}
+            {test:/\.css$/,loader:ExtractTextPlugin.extract("style-loader", "css-loader")}
+        ]
+    }
+```
+
+注意：test 正则语法
+
 
 
 
