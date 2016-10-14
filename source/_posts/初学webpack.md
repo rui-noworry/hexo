@@ -511,6 +511,8 @@ loader是支持链式执行的，并且由右向左执行，可以由sass-loader
 
 注意：test 正则语法
 
+[github上Demo地址](https://github.com/rui-noworry/myWeb/tree/master/webpack-demo1)
+
 
 
 
