@@ -14,6 +14,7 @@ categories: js
 知识点：$(document).ready()和window.onload的区别
 
 解决：
+> 图片加载完毕之后再进行处理
 	``` bash
 	$("img")[0].onload = function(){
 		// 为了万无一失

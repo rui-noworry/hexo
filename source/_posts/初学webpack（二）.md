@@ -393,8 +393,199 @@ render(
 	 document.getElementById('root')
 );
 ```
-> 此时css和js会打包到一个文件夹中，css也可以打包到单独的文件，可以使用
+> 此时css以内联的方式被引进了index.html中，css也可以打包到单独的文件要通过html-webpack-plugin插件
 
-执行失败
-js引入css有点小问题，下周继续。。。。。
+### css预处理器
+#### postcss
+为css代码自动添加适应不同浏览器的css前缀
+
+首先安装postcss-loader 和 autoprefixer(这个是自动添加前缀的插件)
+
+	npm install --save-dev postcss-loader autoprefixer
+
+现在配置webpack.config.js
+
+> 需要新建一个postcss关键字，并在里面申明依赖的插件，现在写的css会自动根据can I use 里得数据添加不同前缀了
+
+``` bash
+	module.exports = {
+	    devtools:'eval-source-map',// 配置生成source-map，选择合适的选项，
+	    entry: __dirname + "/app/main.js", // 唯一入口文件
+	    output: {
+	        path: __dirname + "/public", // 打包后文件输出目录
+	        filename: "bundle.js" // 打包后，输出的文件名
+	    },
+	    module:{ // 注意这是module而不是modules
+	        loaders:[
+	            {
+	                test:/\.json$/,
+	                loader: "json"
+	            },
+	            {
+	                test:/\.js$/,
+	                loader:"babel",
+	                exclude: '/node_modules/',
+	                query: {
+	                    presets: ['es2015','react']
+	                }
+	            },
+	            {
+	               test:/\.css$/,
+	                loader:"style!css!postcss" //给css3元素自动加前缀
+	            }
+	        ]
+	    },
+	    postcss:[ // 注意这是数组，不是对象
+	          require("autoprefixer") // 调用自动添加前缀的插件
+	    ],
+	    devServer: {
+	        contentBase:"./public", // 启动public下的文件
+	        colors:true,// 终端输出结果为彩色
+	        historyApiFallback:true,// 不跳转
+	        inline:true// 实时刷新
+	    }
+	}
+```
+
+运行 npm start 查看浏览器源码 head>style即可看到，自动加了前缀
+
+### 插件（plugins）
+插件（Plugins）是用来拓展webpack功能的，他们会在整个构建过程中生效，执行相关任务。
+* 在这里我们区分一下loaders和plugins
+loaders：在打包构建过程中用来处理源文件（jsx，scss, less..)一次处理一个
+plugins：是在整个构建过程中起作用
+
+> webpack 有很多内置的插件，同时也有很多第三方的插件，可以让我们完成更加丰富的功能
+
+#### 使用插件
+要使用某个插件，首先通过 npm 安装 ，然后在webpack中配置plugins关键字（是一个数组）
+
+例如：添加一个版权声明的插件
+``` bash
+var webpack = require("webpack");
+module.exports = {
+    devtools:'eval-source-map',// 配置生成source-map，选择合适的选项，
+    entry: __dirname + "/app/main.js", // 唯一入口文件
+    output: {
+        path: __dirname + "/public", // 打包后文件输出目录
+        filename: "bundle.js" // 打包后，输出的文件名
+    },
+    module:{ // 注意这是module而不是modules
+        loaders:[
+            {
+                test:/\.json$/,
+                loader: "json"
+            },
+            {
+                test:/\.js$/,
+                loader:"babel",
+                exclude: '/node_modules/',
+                query: {
+                    presets: ['es2015','react']
+                }
+            },
+            {
+               test:/\.css$/,
+                loader:"style!css!postcss" // 添加对样式表的处理
+            }
+        ]
+    },
+    postcss:[
+          require("autoprefixer") // 调用自动添加前缀的插件
+    ],
+    plugins:[
+        new webpack.BannerPlugin("copyRight Flying")
+    ],
+    devServer: {
+        contentBase:"./public", // 启动public下的文件
+        colors:true,// 终端输出结果为彩色
+        historyApiFallback:true,// 不跳转
+        inline:true// 实时刷新
+    }
+}
+```
+
+npm start运行之后，生成的bundle.js的最上面会出现copyRight Flying 版权声明
+
+### HtmlWebpackPlugin
+这个插件的作用是依据一个简单的模板，帮你生成最终的html5文件，这个文件自动引用了你打包后的js文件。每次编译都在文件名中插入一个不同的哈希值
+
+安装：
+
+	npm insatll --save-dev html-webpack-plugin
+
+操作：
+1. 移除public文件夹，利用此插件，html5文件会自动生成，此外css已经通过前面的操作打包到了js中
+2. 在app目录下创建一个html文件模板，这个模板包含title等其他你需要的元素，在编译过程中，本插件会依据此模板生成最终的html页面，会自动添加所依赖的css，js，favicon等文件，在本例中我们命名模板文件名称为index.tmpl.html, 模板源代码：
+
+	``` bash
+	<!DOCTYPE html>
+	<html lang="en">
+	<head>
+	    <meta charset="UTF-8">
+	    <title>webpack demo2</title>
+	</head>
+	<body>
+	    <div id="root"></div>
+	</body>
+	</html>
+	```
+3. 更新webpack的配置文件，方法同上，新建一个build文件夹用来存放最终的输出文件
+
+``` bash
+var webpack = require("webpack");
+//import webpack from "webpack"; 注意配置文件中不能用import，其他文件可以
+var HtmlWebpackPlugin = require('html-webpack-plugin');
+
+module.exports = {
+    devtools:'eval-source-map',// 配置生成source-map，选择合适的选项，
+    entry: __dirname + "/app/main.js", // 唯一入口文件
+    output: {
+        path: __dirname + "/build", // 打包后文件输出目录
+        filename: "bundle.js" // 打包后，输出的文件名
+    },
+    module:{ // 注意这是module而不是modules
+        loaders:[
+            {
+                test:/\.json$/,
+                loader: "json"
+            },
+            {
+                test:/\.js$/,
+                loader:"babel",
+                exclude: '/node_modules/',
+                query: {
+                    presets: ['es2015','react']
+                }
+            },
+            {
+               test:/\.css$/,
+                loader:"style!css!postcss" // 添加对样式表的处理
+            }
+        ]
+    },
+    postcss:[
+          require("autoprefixer") // 调用自动添加前缀的插件
+    ],
+    plugins:[
+        new HtmlWebpackPlugin({
+            template: __dirname+"/app/index.tmpl.html"
+        })
+    ],
+    devServer: {
+        contentBase:"./public", // 启动public下的文件
+        colors:true,// 终端输出结果为彩色
+        historyApiFallback:true,// 不跳转
+        inline:true// 实时刷新
+    }
+}
+```
+
+进行到html-webpack-plugin，可能是网速原因还没有安装成功，，待续。。。。
+
+
+
+
+
+
 [github上Demo地址](https://github.com/rui-noworry/myWeb/tree/master/webpack-demo2)
