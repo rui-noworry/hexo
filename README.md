@@ -23,6 +23,8 @@ hexo s
 预览页面的时候会发现空白的情况，需要重新下载主题：
  git clone https://github.com/iissnan/hexo-theme-next themes/next
 
+ 然后根据hexo-theme-next-config-back备份主题配置的文件进行覆盖即可
+
 
 没问题之后就发布
 hexo d
