@@ -30,3 +30,7 @@ hexo s
 hexo d
 
 ```
+
+创建文章
+
+hexo new "vue"

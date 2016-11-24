@@ -86,3 +86,14 @@ break-all （可以在单词某个字母处换行）
 		<p> <p></p> </p>
 
 *  注意在做详情介绍的时候外层标签不能用p，编辑器上传的数据可能含有p标签*
+
+## 显示固定的函数多余显示...
+
+```bash
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-box-orient: vertical
+    -webkit-line-clamp: 3;
+```
+> 如果设置box会对当前样式产生影响，再给他加一个父层

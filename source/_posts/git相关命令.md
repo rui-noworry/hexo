@@ -11,6 +11,7 @@ categories: Git
 - git push origin master 提交到远程master分支
 - git status 查看状态
 - git add -f 文件名/文件路径 强制添加到仓库
+- npm init -y这里的-y就是不用一步一步的提示，所有的都是yes
 
 2 如果add过程中意外取消，再次执行命令的时候会提示locked
 

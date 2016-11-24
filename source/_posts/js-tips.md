@@ -27,3 +27,27 @@ while(dom.firstChild){
 > JSON里不能有单引号，全部用双引号
 
 [检测地址](http://www.bejson.com)
+
+### this指向
+
+> es6箭头函数的this永远指向的是所在对象的最外层，es5的this指向的是调用者
+function中的this默认指向的是window
+
+### promise
+> Promise 必须有返回值，错误的结果也要接收返回值，否则无法接收结果
+
+*用法，首先引入Promise
+
+```javascript
+
+    import {Promise} from 'es6-promise'
+    //同时请求多个方法
+    Promise.all([
+         Account.getCard(this.user.id),
+             Account.bankList()
+         ]).then((values)=> {
+              this.oldCardInfo = values[0] || {};
+              this.banks = values[1];
+    });
+
+```
