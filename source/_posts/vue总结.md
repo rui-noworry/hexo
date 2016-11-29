@@ -72,3 +72,8 @@ vue2.0
 ```bash
 <article class="list-lessons-container" :class="{'noborder':nodata,'borderTransparent': routetype == 3}">一个标签里只能写一个:class
 ```
+
+### 关于computed
+
+> 即使属你放在computed里，dom里的元素或input值是不会响应式的变化
+

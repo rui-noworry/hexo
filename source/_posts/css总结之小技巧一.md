@@ -97,3 +97,21 @@ break-all （可以在单词某个字母处换行）
     -webkit-line-clamp: 3;
 ```
 > 如果设置box会对当前样式产生影响，再给他加一个父层
+
+## display:inline-block代替float:left
+
+> 并排显示的inline-block元素，父层设置了font-size：0 letter-spacing：-3px子元素就会显示在一行，但在uc浏览器中可能也会折行，因为标签间的折行会起作
+
+* 解决去掉标签与标签之间的回车和空格
+
+## 关于textarea实现文本的左对齐
+
+> textarea会把开始标签到结束标签里的内容全部原样显示，包括空格和代码。
+
+例如：你的代码是这样写的：
+```bash
+<textarea rows="" cols="">   content</textarea>，特别是我们不注意的时候：
+<textarea rows="" cols="">content
+</textarea>这样进行换行，也被看做是空格，所以也就不能实现对齐了，要想始终保持左对齐必须：
+<textarea rows="" cols="">content</textarea>这样没有空格
+```
