@@ -16,8 +16,23 @@ categories: css
 		maximum-scale = 1.0, // 最大缩放
 		user-scalable  = no // 用户是否能缩放
 
-### rem与px转换技巧
+### 字体大小设置
 
->1rem = 设计图宽度/20或10 px （根据情况而定）
+> 移动端页面字体大小原理：
+设计图字体大小/设计图宽度 = 移动端字体大小/移动设备宽度
+
+
+做法：
+
+在入口文件中 设置移动设备根字体大小：document.documentElement.style.fontSize = window.innerWidth + "px";// 例如320px
+
+mixin里进行字体转换：
+
+设计图中字体大小/1080设计图宽度 * 根字体大小（1rem）无论设备的宽度是多少px，都是1rem
+
+
+$pxValue/ $designFont-Size * 1rem;
+
+注意：因为html字体大小可能会影响字间距，所以要给body重置字体大小为12px
 
 
