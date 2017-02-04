@@ -35,4 +35,10 @@ $pxValue/ $designFont-Size * 1rem;
 
 注意：因为html字体大小可能会影响字间距，所以要给body重置字体大小为12px
 
+### ios兼容问题：
+
+* 非列表要用touchend 并且要执行e.preventDefault 因为touchstart有事件穿透问题会直接点击到下个页面的某个位置
+
+* 列表用click会有一个300s延迟解决可用fastClick或者zepto的tap
+
 

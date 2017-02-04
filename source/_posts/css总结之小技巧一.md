@@ -115,3 +115,10 @@ break-all （可以在单词某个字母处换行）
 </textarea>这样进行换行，也被看做是空格，所以也就不能实现对齐了，要想始终保持左对齐必须：
 <textarea rows="" cols="">content</textarea>这样没有空格
 ```
+
+## 去掉input在浏览器中默认的 右侧叉号
+``` bash
+    input[type="search"]::-webkit-search-cancel-button{
+        display:none;
+    }
+```

@@ -77,3 +77,7 @@ vue2.0
 
 > 即使属你放在computed里，dom里的元素或input值是不会响应式的变化
 
+### 关于router.push
+
+> 无法跳转到当前路由
+
