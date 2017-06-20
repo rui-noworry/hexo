@@ -51,3 +51,7 @@ function中的this默认指向的是window
     });
 
 ```
+逻辑判断要严谨，例如在使用promise的时候：
+1. 成功返回数据 - 数据为空的情况 then
+2. 服务器返回error的情况 catch
+

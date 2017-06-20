@@ -17,3 +17,8 @@ categories: Git
 
 > 解决： 删除.git文件中以.locked结尾的文件
 
+3. git rebase --continue
+   git rebase --abort
+   在Git update的时候如果出现了冲突 查看冲突文件 如果想撤销 执行 git rebase --abort
+   解决冲突之后 继续git rebase --continue
+
