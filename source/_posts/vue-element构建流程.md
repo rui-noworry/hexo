@@ -81,3 +81,6 @@ main.js 配置一些第三方插件等等
 ```bash
 <style lang='scss' rel="stylesheet/scss">加  rel="stylesheet/scss"是为了写样式的时候有提示
 ```
+
+### 优化
+安装插件DLLPlugin 线上将第三方的库打包 缓存到浏览器，不用重复下载，加快编译速度和浏览速度
