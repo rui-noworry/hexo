@@ -55,6 +55,11 @@ git 地址 https://github.com/rui-noworry
 
    git branch name  创建分支
 
+   stash的使用场景：
+   * 当你的当前分支没有做完的时候 ，有个临时bug需要处理，但是此时又不想提交，这时候需要stash 存储起来，然后创建新分支，
+     新分支处理完合并到master,再回到当前分支，git stash pop恢复并删除存储的文件
+     （如果再当前没有处理完文件的基础上创建分支，分支上也会有这些未处理完的文件并且无法切换到其他分支，所以需要存储）
+
    git stash 把当前的工作隐藏起来 等以后恢复现场后继续工作
 
    git stash list 查看所有被隐藏的文件列表
@@ -63,13 +68,14 @@ git 地址 https://github.com/rui-noworry
 
    git stash drop 删除文件
 
-   git stash pop 恢复文件的同时 也删除文件
+   git stash pop 恢复文件的同时 也删除文件 --------------重要（否则stash的数量会连续累加）
 
    git remote 查看远程库的信息
 
    git remote –v 查看远程库的详细信息
 
    git push origin master  Git会把master分支推送到远程库对应的远程分支上
+   （创建分支之后 推送到远程，远程才会显示：git push origin new(new是新建的分支)）
 ```
 ### 基本的常用命令
 ```bash
