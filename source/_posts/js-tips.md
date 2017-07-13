@@ -55,3 +55,17 @@ function中的this默认指向的是window
 1. 成功返回数据 - 数据为空的情况 then
 2. 服务器返回error的情况 catch
 
+### mouseover mouseenter mouseout mouseleave区别
+
+> mouseenter:
+  事件在鼠标进入某个元素，或第一次进入这个元素的某个子元素时触发。一旦触发后，
+  在mouseleave之前，鼠标在这个元素的子元素上触发mouseenter事件都不会触发这个元素的mouseenter事件。
+  即：一旦进入，在子元素间的mouseenter不算是在本元素上的mouseenter。
+
+  mouseover:
+  事件是必然冒泡的，一旦子元素mouseover了，本元素必然mouseover（除非子元素上禁止冒泡了）
+  (在子元素上移动必然一直触发mouseover和mouseout)
+
+### target
+
+> 获取dom时间的 当前 触发对象 e.currentTarget
