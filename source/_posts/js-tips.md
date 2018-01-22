@@ -68,4 +68,43 @@ function中的this默认指向的是window
 
 ### target
 
+
+### array 相关
+1. Math.max.apply(Math, [1,2,3]  获取一组数的最大值
+
+   Math.max(1, 3, 4, 5, 6) 获取最大值
+
+   min 同理
+
 > 获取dom时间的 当前 触发对象 e.currentTarget
+
+### jquery.validate() 相关
+1. 对隐藏元素不进行验证
+   解决方案：$('#detail').validate({
+    ignore: [], // 置空
+    rules: {}
+   });
+2. 如果动态追加验证
+   解决方案：$('input[name="color"]').rules('add', {require: true})
+
+### jquery datatables 相关
+1. 删除某一行的数据
+   var dtcot = $('#table').DataTable({
+   		sDom: "Tt<'row-fluid'<'span6'i><'span6'p>>",
+   		bSort : false,
+   		oTableTools : {aButtons:[]},
+   		aoColumns : tableView.columnData
+   });
+   dtcot.fnDeleteRow($(this).parentsUntil('tr').parent()[0])
+2. 如果想动态生成datatable ，就在事件里重新定义，不能重复定义，会报错
+
+3.动态的生成列
+    data.forEach(pitem=>{
+		let obj = {};
+		obj.mData = function(item){
+		    return cellRenderer(item, pitem.columnName) // 显示列的字段值
+		};
+		obj.sTitle = pitem.columnNameCN; // 显示列的标题
+		tableView.columnData.push(obj);
+    });
+4. console.log(dtcot) 可以了解获取所有属性和方法

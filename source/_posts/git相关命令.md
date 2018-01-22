@@ -8,6 +8,9 @@ git 地址 https://github.com/rui-noworry
 
 
 ### Git基本常用命令如下：
+
+> 命令中带某些操作的 如果是单词的 用--version 如果是首字母就用 -v
+
 ``` bash
    mkdir：         XX (创建一个空目录 XX指目录名)
 
@@ -37,8 +40,8 @@ git 地址 https://github.com/rui-noworry
 
    git rm XX          删除XX文件
 
+   注意下面两行命令一起使用，否者有问题
    git remote add origin https://github.com/tugenhua0707/testgit 关联一个远程库
-
    git push –u(第一次要用-u 以后不需要) origin master 把当前master分支推送到远程库
 
    git clone https://github.com/tugenhua0707/testgit  从远程库中克隆
@@ -50,10 +53,13 @@ git 地址 https://github.com/rui-noworry
    git checkout master 切换回master分支
 
    git merge dev    在当前的分支上合并dev分支
+   merge之后要push，远程才会生效
 
    git branch –d dev 删除dev分支
 
    git branch name  创建分支
+
+   git remote -v 查看当前所在远程版本
 
    stash的使用场景：
    * 当你的当前分支没有做完的时候 ，有个临时bug需要处理，但是此时又不想提交，这时候需要stash 存储起来，然后创建新分支，
@@ -119,7 +125,15 @@ git 地址 https://github.com/rui-noworry
 
    查看分支：git branch
 
-   创建分支：git branch name
+   创建分支：git branch name （创建本地分支）
+           git push origin name (推送分支到远程)
+
+           git branch --set-upstream-to=origin/develop （设置默认的流为origin/develop或者是master，否者push的时候会有问题）
+           如果不设置就得执行 git pull(push) origin develop或者是master
+
+   修改分支名：git branch -m name name1 (修改分支名字name为name1)
+             git push origin name1 (将name1 推送到远程)
+             git push origin -d name (将远程的name删除)
 
    切换分支：git checkout name
 
@@ -128,7 +142,9 @@ git 地址 https://github.com/rui-noworry
    合并某分支到当前分支：git merge name (合并后 分支的信息会消失)
                      git merge --no-ff -m '合并分支' dev (合并分支并保留 分支在 git log 的信息)
 
-   删除分支：git branch –d name
+   删除分支：git branch –d name (删除本地分支)
+           git push origin -d name (删除远程分支)
+           此步骤需要执行两次
 
    测试先有本地分支 然后远程创建 repository 再关联
 
