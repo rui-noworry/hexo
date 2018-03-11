@@ -160,4 +160,10 @@ git 地址 https://github.com/rui-noworry
 
    要查看远程库的详细信息 使用 git remote –v
 
+6. git  设置忽略文件
+
+   git rm -r --cached .
+   git add .
+   git commit -m 'update .gitignore'
+
 很好的git 学习资料：http://www.open-open.com/lib/view/open1414396787325.html
