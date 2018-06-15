@@ -46,3 +46,9 @@ categories: node
 > 让gulp 任务，可以相互独立，解除任务间的依赖，增强task复用
 
 	require('run-sequence')
+
+>   npm install  报错的处理方法
+
+    报错：Unexpected end of JSON input while parsing near '...830659},"1.0.30000257'
+
+    解决：npm cache clean --force 强制清理缓存
